@@ -1,16 +1,19 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Search, Menu, X, Mountain } from 'lucide-react'
+import { useSession, signOut } from 'next-auth/react'
 
 import { cn } from '@/lib/utils'
 import { NAV_LINKS } from '@/constants/navigation'
 
 export function Navbar() {
   const pathname = usePathname()
+  const { data: session, status } = useSession()
 
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
@@ -107,17 +110,44 @@ export function Navbar() {
             <Search className="h-5 w-5" />
           </button>
 
-          <Link
-            href="/login"
-            className={cn(
-              'hidden rounded-full px-4 py-2 text-sm font-medium transition-colors md:inline-flex',
-              scrolled
-                ? 'hover:bg-secondary'
-                : 'hover:bg-white/15 text-white'
-            )}
-          >
-            Login
-          </Link>
+          {status === 'authenticated' && session?.user ? (
+            <button
+              onClick={() => signOut({ redirectTo: '/' })}
+              className={cn(
+                'hidden items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium transition-colors md:inline-flex',
+                scrolled
+                  ? 'hover:bg-secondary'
+                  : 'hover:bg-white/15 text-white'
+              )}
+            >
+              {session.user.image ? (
+                <Image
+                  src={session.user.image}
+                  alt={session.user.name ?? 'Profile'}
+                  width={28}
+                  height={28}
+                  className="rounded-full"
+                />
+              ) : (
+                <span className="grid h-7 w-7 place-items-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
+                  {session.user.name?.[0] ?? 'U'}
+                </span>
+              )}
+              Logout
+            </button>
+          ) : (
+            <Link
+              href="/login"
+              className={cn(
+                'hidden rounded-full px-4 py-2 text-sm font-medium transition-colors md:inline-flex',
+                scrolled
+                  ? 'hover:bg-secondary'
+                  : 'hover:bg-white/15 text-white'
+              )}
+            >
+              Login
+            </Link>
+          )}
 
           <Link
             href="/explore"
@@ -206,12 +236,25 @@ export function Navbar() {
 
               <div className="mt-8 flex flex-col gap-3">
 
-                <Link
-                  href="/login"
-                  className="rounded-full border border-border px-5 py-3 text-center"
-                >
-                  Login
-                </Link>
+                {status === 'authenticated' ? (
+                  <button
+                    onClick={() => {
+                      setOpen(false)
+                      signOut({ redirectTo: '/' })
+                    }}
+                    className="rounded-full border border-border px-5 py-3 text-center"
+                  >
+                    Logout
+                  </button>
+                ) : (
+                  <Link
+                    href="/login"
+                    onClick={() => setOpen(false)}
+                    className="rounded-full border border-border px-5 py-3 text-center"
+                  >
+                    Login
+                  </Link>
+                )}
 
                 <Link
                   href="/explore"
