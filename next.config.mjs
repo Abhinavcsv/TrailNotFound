@@ -7,11 +7,9 @@ const nextConfig = {
     unoptimized: true,
   },
   serverExternalPackages: ['@prisma/client', 'pg'],
-  experimental: {
-    turbo: {
-      resolveAlias: {
-        '.prisma/client/default': './node_modules/.prisma/client/default.js',
-      },
+  turbopack: {
+    resolveAlias: {
+      '.prisma/client/default': './node_modules/.prisma/client/default.js',
     },
   },
 }
