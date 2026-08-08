@@ -1,6 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import {
+  MapPin,
+  Navigation,
+  FlagTriangleRight,
+  CalendarDays,
+  Wallet,
+  Sparkles,
+  Compass,
+} from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -27,6 +36,18 @@ const TRAVEL_STYLES = [
 interface PlannerFormProps {
   onSubmit: (values: PlannerFormValues) => void;
   isLoading: boolean;
+}
+
+function IconInput({
+  icon: Icon,
+  ...props
+}: React.ComponentProps<"input"> & { icon: React.ElementType }) {
+  return (
+    <div className="relative">
+      <Icon className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+      <Input className="h-11 pl-10" {...props} />
+    </div>
+  );
 }
 
 export function PlannerForm({ onSubmit, isLoading }: PlannerFormProps) {
@@ -61,11 +82,11 @@ export function PlannerForm({ onSubmit, isLoading }: PlannerFormProps) {
   }
 
   return (
-    <Card>
+    <Card className="rounded-3xl border border-white/60 bg-white/60 p-2 shadow-2xl shadow-primary/10 backdrop-blur-xl sm:p-4">
       <CardHeader>
-        <CardTitle>Plan your trip</CardTitle>
+        <CardTitle className="font-display text-2xl font-bold">Plan your trip</CardTitle>
         <CardDescription>
-          Tell us where and how you want to travel — our AI will build a day-by-day itinerary.
+          Tell us where and how you want to travel — we&apos;ll build a day-by-day itinerary.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -73,7 +94,8 @@ export function PlannerForm({ onSubmit, isLoading }: PlannerFormProps) {
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="startLocation">Starting from</Label>
-              <Input
+              <IconInput
+                icon={Navigation}
                 id="startLocation"
                 placeholder="e.g. Delhi"
                 value={startLocation}
@@ -83,7 +105,8 @@ export function PlannerForm({ onSubmit, isLoading }: PlannerFormProps) {
             </div>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="endLocation">Ending at (optional)</Label>
-              <Input
+              <IconInput
+                icon={FlagTriangleRight}
                 id="endLocation"
                 placeholder="Same as start, unless different"
                 value={endLocation}
@@ -94,7 +117,8 @@ export function PlannerForm({ onSubmit, isLoading }: PlannerFormProps) {
 
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="destination">Destination</Label>
-            <Input
+            <IconInput
+              icon={MapPin}
               id="destination"
               placeholder="e.g. Tirthan Valley, Himachal Pradesh"
               value={destination}
@@ -106,7 +130,8 @@ export function PlannerForm({ onSubmit, isLoading }: PlannerFormProps) {
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="days">Trip length (days)</Label>
-              <Input
+              <IconInput
+                icon={CalendarDays}
                 id="days"
                 type="number"
                 min={1}
@@ -118,7 +143,8 @@ export function PlannerForm({ onSubmit, isLoading }: PlannerFormProps) {
             </div>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="budget">Budget (INR)</Label>
-              <Input
+              <IconInput
+                icon={Wallet}
                 id="budget"
                 type="number"
                 min={1000}
@@ -130,7 +156,7 @@ export function PlannerForm({ onSubmit, isLoading }: PlannerFormProps) {
             </div>
           </div>
 
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-2">
             <Label>Interests</Label>
             <div className="flex flex-wrap gap-2">
               {INTEREST_OPTIONS.map((interest) => {
@@ -141,9 +167,9 @@ export function PlannerForm({ onSubmit, isLoading }: PlannerFormProps) {
                     key={interest}
                     onClick={() => toggleInterest(interest)}
                     className={
-                      "rounded-full border px-3 py-1.5 text-xs font-medium transition-colors " +
+                      "rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors " +
                       (active
-                        ? "border-primary bg-primary text-primary-foreground"
+                        ? "border-primary bg-primary text-primary-foreground shadow-sm shadow-primary/25"
                         : "border-border bg-background hover:bg-muted")
                     }
                   >
@@ -154,8 +180,11 @@ export function PlannerForm({ onSubmit, isLoading }: PlannerFormProps) {
             </div>
           </div>
 
-          <div className="flex flex-col gap-1.5">
-            <Label>Travel style</Label>
+          <div className="flex flex-col gap-2">
+            <Label className="flex items-center gap-1.5">
+              <Compass className="h-3.5 w-3.5" />
+              Travel style
+            </Label>
             <div className="flex gap-2">
               {TRAVEL_STYLES.map((style) => (
                 <button
@@ -163,9 +192,9 @@ export function PlannerForm({ onSubmit, isLoading }: PlannerFormProps) {
                   key={style.value}
                   onClick={() => setTravelStyle(style.value)}
                   className={
-                    "flex-1 rounded-lg border px-3 py-2 text-sm font-medium transition-colors " +
+                    "flex-1 rounded-xl border px-3 py-2.5 text-sm font-medium transition-colors " +
                     (travelStyle === style.value
-                      ? "border-primary bg-primary text-primary-foreground"
+                      ? "border-primary bg-primary text-primary-foreground shadow-sm shadow-primary/25"
                       : "border-border bg-background hover:bg-muted")
                   }
                 >
@@ -175,7 +204,13 @@ export function PlannerForm({ onSubmit, isLoading }: PlannerFormProps) {
             </div>
           </div>
 
-          <Button type="submit" size="lg" disabled={isLoading} className="mt-2">
+          <Button
+            type="submit"
+            size="lg"
+            disabled={isLoading}
+            className="mt-2 gap-2 shadow-lg shadow-primary/25"
+          >
+            <Sparkles className="h-4 w-4" />
             {isLoading ? "Generating your itinerary..." : "Generate Itinerary"}
           </Button>
         </form>
