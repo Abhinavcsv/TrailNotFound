@@ -16,6 +16,7 @@ model User {
   id            String    @id @default(cuid())
   name          String?
   email         String?   @unique
+  passwordHash  String?
   emailVerified DateTime?
   image         String?
   createdAt     DateTime  @default(now())
@@ -106,18 +107,18 @@ model Category {
 }
 
 model Place {
-  id          String   @id @default(cuid())
-  name        String
-  slug        String   @unique
-  description String   @db.Text
-  coverImage  String?
-  images      String[] @default([])
-  latitude    Float?
-  longitude   Float?
+  id              String   @id @default(cuid())
+  name            String
+  slug            String   @unique
+  description     String   @db.Text
+  coverImage      String?
+  images          String[] @default([])
+  latitude        Float?
+  longitude       Float?
   bestTimeToVisit String?
-  avgBudget   Int?
-  rating      Float    @default(0)
-  isHiddenGem Boolean  @default(false)
+  avgBudget       Int?
+  rating          Float    @default(0)
+  isHiddenGem     Boolean  @default(false)
 
   stateId String?
   state   State?  @relation(fields: [stateId], references: [id])
@@ -163,12 +164,12 @@ model Trip {
 }
 
 model SavedTrip {
-  id       String   @id @default(cuid())
-  userId   String
-  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tripId   String
-  trip     Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
-  savedAt  DateTime @default(now())
+  id      String   @id @default(cuid())
+  userId  String
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tripId  String
+  trip    Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  savedAt DateTime @default(now())
 
   @@unique([userId, tripId])
   @@map("saved_trips")
@@ -188,15 +189,15 @@ model Review {
 }
 
 model Blog {
-  id        String   @id @default(cuid())
-  title     String
-  slug      String   @unique
-  content   String   @db.Text
+  id         String   @id @default(cuid())
+  title      String
+  slug       String   @unique
+  content    String   @db.Text
   coverImage String?
-  authorId  String
-  author    User     @relation(fields: [authorId], references: [id])
-  published Boolean  @default(false)
-  createdAt DateTime @default(now())
+  authorId   String
+  author     User     @relation(fields: [authorId], references: [id])
+  published  Boolean  @default(false)
+  createdAt  DateTime @default(now())
 
   @@map("blogs")
 }

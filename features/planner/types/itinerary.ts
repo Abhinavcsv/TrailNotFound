@@ -11,11 +11,34 @@ export interface ItineraryDay {
   estimatedCost: number;
 }
 
+export interface BudgetBreakdown {
+  transport: number;
+  accommodation: number;
+  food: number;
+  activities: number;
+  miscellaneous: number;
+}
+
+export interface HiddenGem {
+  name: string;
+  location: string;
+  description: string;
+  whyVisit: string;
+}
+
 export interface ItineraryResponse {
   destination: string;
   summary: string;
-  days: ItineraryDay[];
+
+  budget: number;
   totalEstimatedCost: number;
+
+  budgetBreakdown: BudgetBreakdown;
+
+  days: ItineraryDay[];
+
+  hiddenGems: HiddenGem[];
+
   travelTips: string[];
 }
 

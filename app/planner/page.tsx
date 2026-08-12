@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { Sparkles, Star } from "lucide-react";
+import { Navbar } from "@/components/shared/navbar";
+import { Footer } from "@/components/shared/footer";
 import { PlannerForm } from "@/features/planner/components/PlannerForm";
 import { ItineraryResult } from "@/features/planner/components/ItineraryResult";
 import type { ItineraryResponse, PlannerFormValues } from "@/features/planner/types/itinerary";
@@ -36,8 +38,11 @@ export default function PlannerPage() {
       setIsLoading(false);
     }
   }
+ 
 
   return (
+  <>
+    <Navbar />
     <main className="relative">
       {/* Fixed, full-viewport mesh gradient — stays behind everything no matter how long
           the page grows once an itinerary is generated, so it never runs out on scroll. */}
@@ -135,5 +140,7 @@ export default function PlannerPage() {
         )}
       </section>
     </main>
-  );
+     <Footer />
+  </>
+);
 }
