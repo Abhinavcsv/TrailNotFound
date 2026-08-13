@@ -73,6 +73,19 @@ model VerificationToken {
   @@unique([identifier, token])
   @@map("verification_tokens")
 }
+model PasswordResetOTP {
+  id        String   @id @default(cuid())
+  email     String
+  otpHash   String
+  expiresAt DateTime
+  attempts  Int      @default(0)
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([email])
+  @@index([expiresAt])
+  @@map("password_reset_otps")
+}
 
 // ---------- App models ----------
 
