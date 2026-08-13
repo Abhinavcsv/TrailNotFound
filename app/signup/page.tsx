@@ -2,8 +2,18 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { signIn } from "next-auth/react";
-import { Eye, EyeOff, Lock, Mail, User, Mountain } from "lucide-react";
+import {
+  Eye,
+  EyeOff,
+  Lock,
+  Mail,
+  User,
+  Mountain,
+  ArrowRight,
+} from "lucide-react";
 
 function GoogleIcon() {
   return (
@@ -18,7 +28,7 @@ function GoogleIcon() {
       />
       <path
         fill="#FBBC05"
-        d="M5.27 14.27a7.2 7.2 0 010-4.54V6.62H1.27a12 12 0 000 10.76l4-3.11z"
+        d="M5.27 14.27a7.2 7.2 0 010-4.54V6.62H1.27a12 12 0 000 10.76l4 3.11z"
       />
       <path
         fill="#EA4335"
@@ -28,53 +38,9 @@ function GoogleIcon() {
   );
 }
 
-function InputField({
-  icon: Icon,
-  type = "text",
-  placeholder,
-  value,
-  onChange,
-  showPassword,
-  onTogglePassword,
-}: {
-  icon: typeof User;
-  type?: string;
-  placeholder: string;
-  value: string;
-  onChange: (value: string) => void;
-  showPassword?: boolean;
-  onTogglePassword?: () => void;
-}) {
-  return (
-    <div className="relative">
-      <Icon className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
-
-      <input
-        type={showPassword ? "text" : type}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        className="h-12 w-full rounded-xl border border-slate-200 bg-white pl-12 pr-12 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
-      />
-
-      {onTogglePassword && (
-        <button
-          type="button"
-          onClick={onTogglePassword}
-          className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-700"
-        >
-          {showPassword ? (
-            <EyeOff className="h-5 w-5" />
-          ) : (
-            <Eye className="h-5 w-5" />
-          )}
-        </button>
-      )}
-    </div>
-  );
-}
-
 export default function SignupPage() {
+  const router = useRouter();
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -86,17 +52,27 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
 
-    if (!name.trim() || !email.trim() || !password || !confirmPassword) {
-      setError("Please fill in all fields.");
+    if (!name.trim()) {
+      setError("Please enter your name.");
+      return;
+    }
+
+    if (!email.trim()) {
+      setError("Please enter your email address.");
+      return;
+    }
+
+    if (!password) {
+      setError("Please enter a password.");
       return;
     }
 
     if (password.length < 8) {
-      setError("Password must be at least 8 characters.");
+      setError("Password must be at least 8 characters long.");
       return;
     }
 
@@ -108,168 +84,332 @@ export default function SignupPage() {
     try {
       setLoading(true);
 
-      const response = await fetch("/api/auth/signup", {
+      const res = await fetch("/api/auth/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name,
-          email,
+          name: name.trim(),
+          email: email.trim().toLowerCase(),
           password,
         }),
       });
 
-      const data = await response.json();
+      const data = await res.json();
 
-      if (!response.ok) {
-        setError(data.error || "Unable to create account.");
-        return;
+      if (!res.ok) {
+        throw new Error(
+          data?.error ||
+            data?.message ||
+            "Unable to create account."
+        );
       }
 
-      const result = await signIn("credentials", {
-        email,
-        password,
-        redirect: false,
-      });
-
-      if (result?.error) {
-        window.location.href = "/login";
-        return;
-      }
-
-      window.location.href = "/";
-    } catch {
-      setError("Something went wrong. Please try again.");
+      // Signup successful
+      router.push("/login?registered=true");
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Something went wrong. Please try again."
+      );
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#f8fafc] px-4 py-12">
-      {/* Background decoration */}
-      <div className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-cyan-400/10 blur-3xl" />
+    <main className="min-h-screen">
+      <div className="flex min-h-screen w-full overflow-hidden bg-white">
 
-      <div className="relative w-full max-w-md">
-        {/* Brand */}
-        <div className="mb-8 text-center">
+        {/* LEFT — Hero Image */}
+        <section className="relative hidden w-1/2 overflow-hidden lg:block">
+          <Image
+            src="/images/hero-himalaya.png"
+            alt="Himalayan mountains"
+            fill
+            priority
+            className="object-cover"
+          />
+
+          {/* Image overlays */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-black/10" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent" />
+
+          {/* Logo */}
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-2xl font-extrabold tracking-tight text-slate-900"
+            className="absolute left-8 top-8 z-10 flex items-center gap-2 text-xl font-extrabold tracking-tight text-white"
           >
-            <span className="grid h-10 w-10 place-items-center rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-600/20">
+            <span className="grid h-10 w-10 place-items-center rounded-xl bg-white/15 backdrop-blur-md">
               <Mountain className="h-5 w-5" />
             </span>
 
             TrailNotFound
           </Link>
-        </div>
 
-        {/* Card */}
-        <div className="rounded-3xl border border-slate-200 bg-white p-7 shadow-xl shadow-slate-900/5 sm:p-9">
-          <div className="mb-7 text-center">
-            <h1 className="text-3xl font-bold tracking-tight text-slate-900">
-              Create your account
-            </h1>
+          {/* Hero copy */}
+          <div className="absolute bottom-10 left-8 right-8 z-10 text-white">
+            <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-white/70">
+              Your journey starts here
+            </p>
 
-            <p className="mt-2 text-sm leading-6 text-slate-500">
-              Join TrailNotFound and start discovering your next adventure.
+            <h2 className="max-w-lg text-4xl font-extrabold leading-tight tracking-tight xl:text-5xl">
+              Find the trail.
+              <br />
+              Create the story.
+            </h2>
+
+            <p className="mt-4 max-w-md text-sm leading-6 text-white/75">
+              Discover hidden places, plan unforgettable journeys and share
+              your adventures with a community of explorers.
             </p>
           </div>
+        </section>
 
-          {/* Google */}
-          <button
-            type="button"
-            onClick={() => signIn("google", { callbackUrl: "/" })}
-            className="flex h-12 w-full items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
-          >
-            <GoogleIcon />
-            Continue with Google
-          </button>
+        {/* RIGHT — Signup */}
+        <section className="flex w-full items-center justify-center px-6 py-10 sm:px-10 lg:w-1/2 xl:px-16">
+          <div className="w-full max-w-md">
 
-          {/* Divider */}
-          <div className="my-6 flex items-center gap-4">
-            <div className="h-px flex-1 bg-slate-200" />
-            <span className="text-xs font-medium uppercase tracking-wider text-slate-400">
-              or continue with email
-            </span>
-            <div className="h-px flex-1 bg-slate-200" />
-          </div>
+            {/* Mobile logo */}
+            <div className="mb-10 lg:hidden">
+              <Link
+                href="/"
+                className="inline-flex items-center gap-2 text-xl font-extrabold tracking-tight text-slate-900"
+              >
+                <span className="grid h-10 w-10 place-items-center rounded-xl bg-blue-600 text-white">
+                  <Mountain className="h-5 w-5" />
+                </span>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Name */}
-            <InputField
-              icon={User}
-              placeholder="Full name"
-              value={name}
-              onChange={setName}
-            />
+                TrailNotFound
+              </Link>
+            </div>
 
-            {/* Email */}
-            <InputField
-              icon={Mail}
-              type="email"
-              placeholder="Email address"
-              value={email}
-              onChange={setEmail}
-            />
+            {/* Heading */}
+            <div className="mb-8">
+              <p className="mb-2 text-sm font-semibold text-blue-600">
+                Start your journey 🏔️
+              </p>
 
-            {/* Password */}
-            <InputField
-              icon={Lock}
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={setPassword}
-              showPassword={showPassword}
-              onTogglePassword={() => setShowPassword(!showPassword)}
-            />
+              <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
+                Create your account
+              </h1>
 
-            {/* Confirm Password */}
-            <InputField
-              icon={Lock}
-              type="password"
-              placeholder="Confirm password"
-              value={confirmPassword}
-              onChange={setConfirmPassword}
-              showPassword={showConfirmPassword}
-              onTogglePassword={() =>
-                setShowConfirmPassword(!showConfirmPassword)
-              }
-            />
+              <p className="mt-3 text-sm leading-6 text-slate-500">
+                Join TrailNotFound and start planning your next adventure.
+              </p>
+            </div>
 
-            {error && (
-              <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
-                {error}
-              </div>
-            )}
-
+            {/* Google */}
             <button
-              type="submit"
+              type="button"
+              onClick={() => signIn("google", { callbackUrl: "/" })}
               disabled={loading}
-              className="h-12 w-full rounded-xl bg-blue-600 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 transition hover:-translate-y-0.5 hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+              className="flex h-12 w-full items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {loading ? "Creating account..." : "Create account"}
+              <GoogleIcon />
+              Continue with Google
             </button>
-          </form>
 
-          <p className="mt-6 text-center text-sm text-slate-500">
-            Already have an account?{" "}
-            <Link
-              href="/login"
-              className="font-semibold text-blue-600 hover:text-blue-700"
-            >
-              Log in
-            </Link>
-          </p>
-        </div>
+            {/* Divider */}
+            <div className="my-7 flex items-center gap-4">
+              <div className="h-px flex-1 bg-slate-200" />
 
-        <p className="mt-6 text-center text-xs leading-5 text-slate-400">
-          By creating an account, you agree to our Terms of Service and
-          Privacy Policy.
-        </p>
+              <span className="text-xs font-medium uppercase tracking-wider text-slate-400">
+                or
+              </span>
+
+              <div className="h-px flex-1 bg-slate-200" />
+            </div>
+
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="space-y-5">
+
+              {/* Name */}
+              <div>
+                <label
+                  htmlFor="name"
+                  className="mb-2 block text-sm font-semibold text-slate-700"
+                >
+                  Full name
+                </label>
+
+                <div className="relative">
+                  <User className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+
+                  <input
+                    id="name"
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Your name"
+                    autoComplete="name"
+                    disabled={loading}
+                    required
+                    className="h-12 w-full rounded-xl border border-slate-200 bg-white pl-12 pr-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 disabled:cursor-not-allowed disabled:opacity-60"
+                  />
+                </div>
+              </div>
+
+              {/* Email */}
+              <div>
+                <label
+                  htmlFor="email"
+                  className="mb-2 block text-sm font-semibold text-slate-700"
+                >
+                  Email address
+                </label>
+
+                <div className="relative">
+                  <Mail className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+
+                  <input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="you@example.com"
+                    autoComplete="email"
+                    disabled={loading}
+                    required
+                    className="h-12 w-full rounded-xl border border-slate-200 bg-white pl-12 pr-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 disabled:cursor-not-allowed disabled:opacity-60"
+                  />
+                </div>
+              </div>
+
+              {/* Password */}
+              <div>
+                <label
+                  htmlFor="password"
+                  className="mb-2 block text-sm font-semibold text-slate-700"
+                >
+                  Password
+                </label>
+
+                <div className="relative">
+                  <Lock className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+
+                  <input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="At least 8 characters"
+                    autoComplete="new-password"
+                    disabled={loading}
+                    required
+                    className="h-12 w-full rounded-xl border border-slate-200 bg-white pl-12 pr-12 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 disabled:cursor-not-allowed disabled:opacity-60"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    disabled={loading}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 disabled:cursor-not-allowed"
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Confirm Password */}
+              <div>
+                <label
+                  htmlFor="confirmPassword"
+                  className="mb-2 block text-sm font-semibold text-slate-700"
+                >
+                  Confirm password
+                </label>
+
+                <div className="relative">
+                  <Lock className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+
+                  <input
+                    id="confirmPassword"
+                    type={
+                      showConfirmPassword ? "text" : "password"
+                    }
+                    value={confirmPassword}
+                    onChange={(e) =>
+                      setConfirmPassword(e.target.value)
+                    }
+                    placeholder="Enter your password again"
+                    autoComplete="new-password"
+                    disabled={loading}
+                    required
+                    className="h-12 w-full rounded-xl border border-slate-200 bg-white pl-12 pr-12 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 disabled:cursor-not-allowed disabled:opacity-60"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setShowConfirmPassword(!showConfirmPassword)
+                    }
+                    disabled={loading}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 disabled:cursor-not-allowed"
+                    aria-label={
+                      showConfirmPassword
+                        ? "Hide password"
+                        : "Show password"
+                    }
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Error */}
+              {error && (
+                <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+                  {error}
+                </div>
+              )}
+
+              {/* Submit */}
+              <button
+                type="submit"
+                disabled={loading}
+                className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-blue-600 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 transition hover:-translate-y-0.5 hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {loading ? "Creating account..." : "Create account"}
+
+                {!loading && (
+                  <ArrowRight className="h-4 w-4" />
+                )}
+              </button>
+            </form>
+
+            {/* Login */}
+            <p className="mt-8 text-center text-sm text-slate-500">
+              Already have an account?{" "}
+              <Link
+                href="/login"
+                className="font-semibold text-blue-600 hover:text-blue-700"
+              >
+                Log in
+              </Link>
+            </p>
+
+            {/* Terms */}
+            <p className="mt-8 text-center text-xs leading-5 text-slate-400">
+              By creating an account, you agree to TrailNotFound&apos;s terms
+              and privacy policy.
+            </p>
+
+          </div>
+        </section>
       </div>
     </main>
   );

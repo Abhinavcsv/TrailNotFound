@@ -1,11 +1,16 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
-    const { name, email, password } = await req.json();
+    const body = await req.json();
 
+    const name = body.name?.trim();
+    const email = body.email?.trim().toLowerCase();
+    const password = body.password;
+
+    // Validation
     if (!name || !email || !password) {
       return NextResponse.json(
         { error: "Name, email and password are required." },
@@ -13,19 +18,23 @@ export async function POST(req: Request) {
       );
     }
 
-    if (password.length < 8) {
+    if (name.length < 2) {
       return NextResponse.json(
-        { error: "Password must be at least 8 characters." },
+        { error: "Name must be at least 2 characters long." },
         { status: 400 }
       );
     }
 
-    const normalizedEmail = email.trim().toLowerCase();
+    if (password.length < 8) {
+      return NextResponse.json(
+        { error: "Password must be at least 8 characters long." },
+        { status: 400 }
+      );
+    }
 
+    // Check existing user
     const existingUser = await prisma.user.findUnique({
-      where: {
-        email: normalizedEmail,
-      },
+      where: { email },
     });
 
     if (existingUser) {
@@ -35,19 +44,20 @@ export async function POST(req: Request) {
       );
     }
 
-    const passwordHash = await bcrypt.hash(password, 12);
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 12);
 
+    // Create user
     const user = await prisma.user.create({
       data: {
-        name: name.trim(),
-        email: normalizedEmail,
-        passwordHash,
+        name,
+        email,
+        passwordHash: hashedPassword,
       },
       select: {
         id: true,
         name: true,
         email: true,
-        createdAt: true,
       },
     });
 
@@ -62,7 +72,7 @@ export async function POST(req: Request) {
     console.error("Signup error:", error);
 
     return NextResponse.json(
-      { error: "Something went wrong. Please try again." },
+      { error: "Something went wrong while creating your account." },
       { status: 500 }
     );
   }
