@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Sparkles, Star } from "lucide-react";
 import { Navbar } from "@/components/shared/navbar";
 import { Footer } from "@/components/shared/footer";
@@ -8,7 +9,10 @@ import { PlannerForm } from "@/features/planner/components/PlannerForm";
 import { ItineraryResult } from "@/features/planner/components/ItineraryResult";
 import type { ItineraryResponse, PlannerFormValues } from "@/features/planner/types/itinerary";
 
-export default function PlannerPage() {
+function PlannerPageContent() {
+  const searchParams = useSearchParams();
+  const initialDestination = searchParams.get("destination") || undefined;
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [itinerary, setItinerary] = useState<ItineraryResponse | null>(null);
@@ -76,7 +80,7 @@ export default function PlannerPage() {
 
       <section className="pb-24 md:pb-32">
         <div className="mx-auto grid max-w-5xl gap-10 px-5 md:px-8 lg:grid-cols-[1fr_320px] lg:items-start lg:gap-14">
-          <PlannerForm onSubmit={handleSubmit} isLoading={isLoading} />
+          <PlannerForm onSubmit={handleSubmit} isLoading={isLoading} initialDestination={initialDestination} />
 
           {/* Signature element: glass-framed trip card stack, grounded with a soft glow */}
           <div className="relative hidden lg:sticky lg:top-28 lg:block">
@@ -143,4 +147,12 @@ export default function PlannerPage() {
      <Footer />
   </>
 );
+}
+
+export default function PlannerPage() {
+  return (
+    <Suspense>
+      <PlannerPageContent />
+    </Suspense>
+  );
 }

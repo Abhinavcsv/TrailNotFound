@@ -1,14 +1,13 @@
-export interface Destination {
+export type Destination = {
   id: string
   name: string
   state: string
   category: string
-  difficulty: "Easy" | "Moderate" | "Hard"
-  budget: number
-  duration: string
-  bestSeason: string
-  rating: number
-  image: string
   description: string
+  image: string
+  rating: number
+  duration: string
+  budget: number
+  difficulty: "Easy" | "Moderate" | "Hard"
   hiddenGem: boolean
 }

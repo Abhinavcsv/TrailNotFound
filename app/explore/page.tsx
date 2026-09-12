@@ -7,15 +7,7 @@ import { DestinationCard } from "@/features/explore/components/DestinationCard"
 import { destinations } from "@/data/destinations"
 import type { Destination } from "@/features/explore/types/destination"
 
-const categories = [
-  "All",
-  "Trekking",
-  "Hill Station",
-  "Beach",
-  "Temple",
-  "Heritage",
-  "Wildlife",
-]
+const categories = ["All", ...Array.from(new Set(destinations.map((d) => d.category)))]
 
 export default function ExplorePage() {
   const [query, setQuery] = useState("")
@@ -59,7 +51,7 @@ export default function ExplorePage() {
       <PageHero
         eyebrow="Explore Destinations"
         title="Find your next escape"
-        subtitle="Explore India's most beautiful trails, mountains, beaches, temples, heritage sites and hidden gems."
+        subtitle="Low-key hill treks and waterfalls across India — the trails and cascades most travel guides skip."
         heightClassName="h-[48svh] min-h-[380px]"
       />
 

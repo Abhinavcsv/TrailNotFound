@@ -58,11 +58,13 @@ const TRAVEL_STYLES = [
 interface PlannerFormProps {
   onSubmit: (values: PlannerFormValues) => void;
   isLoading: boolean;
+  initialDestination?: string;
 }
 
-export function PlannerForm({ onSubmit, isLoading }: PlannerFormProps) {
+export function PlannerForm({ onSubmit, isLoading, initialDestination }: PlannerFormProps) {
   const [startLocation, setStartLocation] = useState("");
-  const [destination, setDestination] = useState("");
+  const [destination, setDestination] = useState(initialDestination || "");
+  const [destinationLocked, setDestinationLocked] = useState(Boolean(initialDestination));
   const [days, setDays] = useState(4);
   const [budget, setBudget] = useState(15000);
   const [interests, setInterests] = useState<string[]>([]);
@@ -166,46 +168,62 @@ export function PlannerForm({ onSubmit, isLoading }: PlannerFormProps) {
                 Where do you want to go?
               </label>
 
-              <button
-                type="button"
-                onClick={() => {
-                  setSurpriseMe((current) => !current);
-                  if (!surpriseMe) setDestination("");
-                }}
-                className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition-all ${
-                  surpriseMe
-                    ? "bg-primary text-primary-foreground shadow-md shadow-primary/20"
-                    : "bg-primary/10 text-primary hover:bg-primary/15"
-                }`}
-              >
-                <WandSparkles className="h-3.5 w-3.5" />
-                Surprise me
-              </button>
+              {!destinationLocked && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSurpriseMe((current) => !current);
+                    if (!surpriseMe) setDestination("");
+                  }}
+                  className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition-all ${
+                    surpriseMe
+                      ? "bg-primary text-primary-foreground shadow-md shadow-primary/20"
+                      : "bg-primary/10 text-primary hover:bg-primary/15"
+                  }`}
+                >
+                  <WandSparkles className="h-3.5 w-3.5" />
+                  Surprise me
+                </button>
+              )}
             </div>
 
-            <div className="relative">
-              <MapPin className="pointer-events-none absolute left-4 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-primary" />
+            {destinationLocked ? (
+              <div className="flex h-14 w-full items-center justify-between rounded-2xl border border-primary/30 bg-primary/10 pl-11 pr-3 relative">
+                <MapPin className="pointer-events-none absolute left-4 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-primary" />
+                <span className="text-sm font-semibold text-foreground">{destination}</span>
+                <button
+                  type="button"
+                  onClick={() => setDestinationLocked(false)}
+                  className="rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-primary shadow-sm transition hover:bg-primary/5"
+                >
+                  Change
+                </button>
+              </div>
+            ) : (
+              <div className="relative">
+                <MapPin className="pointer-events-none absolute left-4 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-primary" />
 
-              <input
-                id="destination"
-                type="text"
-                placeholder={
-                  surpriseMe
-                    ? "AI will choose a destination for you"
-                    : "e.g. Tirthan Valley, Himachal Pradesh"
-                }
-                value={destination}
-                onChange={(e) => setDestination(e.target.value)}
-                disabled={surpriseMe}
-                className={`h-14 w-full rounded-2xl border border-border/70 pl-11 pr-4 text-sm text-foreground outline-none transition-all placeholder:text-muted-foreground/60 focus:border-primary focus:ring-4 focus:ring-primary/10 ${
-                  surpriseMe
-                    ? "cursor-not-allowed bg-primary/5"
-                    : "bg-white/80"
-                }`}
-              />
-            </div>
+                <input
+                  id="destination"
+                  type="text"
+                  placeholder={
+                    surpriseMe
+                      ? "AI will choose a destination for you"
+                      : "e.g. Tirthan Valley, Himachal Pradesh"
+                  }
+                  value={destination}
+                  onChange={(e) => setDestination(e.target.value)}
+                  disabled={surpriseMe}
+                  className={`h-14 w-full rounded-2xl border border-border/70 pl-11 pr-4 text-sm text-foreground outline-none transition-all placeholder:text-muted-foreground/60 focus:border-primary focus:ring-4 focus:ring-primary/10 ${
+                    surpriseMe
+                      ? "cursor-not-allowed bg-primary/5"
+                      : "bg-white/80"
+                  }`}
+                />
+              </div>
+            )}
 
-            {surpriseMe && (
+            {surpriseMe && !destinationLocked && (
               <p className="mt-2 text-xs font-medium text-primary">
                 ✨ We&apos;ll find a destination based on your budget, days and
                 interests.
