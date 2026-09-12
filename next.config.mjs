@@ -5,6 +5,12 @@ const nextConfig = {
   },
   images: {
     unoptimized: true,
+    remotePatterns: [
+      { protocol: "http", hostname: "upload.wikimedia.org" },
+      { protocol: "https", hostname: "upload.wikimedia.org" },
+      { protocol: "http", hostname: "commons.wikimedia.org" },
+      { protocol: "https", hostname: "commons.wikimedia.org" },
+    ],
   },
   serverExternalPackages: ['@prisma/client', 'pg'],
   turbopack: {

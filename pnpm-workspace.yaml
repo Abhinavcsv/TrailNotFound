@@ -1,8 +1,10 @@
 allowBuilds:
+  '@google/genai': false
   '@prisma/engines': true
   esbuild: true
   msw: false
   prisma: true
+  protobufjs: false
   sharp: true
 
 overrides:

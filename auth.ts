@@ -5,11 +5,26 @@ import bcrypt from "bcryptjs";
 
 import { prisma } from "@/lib/prisma";
 import { authConfig } from "./auth.config";
+import { sendWelcomeEmail } from "@/lib/mail";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
 
   adapter: PrismaAdapter(prisma),
+
+  events: {
+    async createUser({ user }) {
+      if (!user.email) {
+        return;
+      }
+
+      try {
+        await sendWelcomeEmail(user.email, user.name);
+      } catch (error) {
+        console.error("Google welcome email failed:", error);
+      }
+    },
+  },
 
   providers: [
     ...authConfig.providers,

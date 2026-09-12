@@ -130,13 +130,14 @@ model Place {
   longitude       Float?
   bestTimeToVisit String?
   avgBudget       Int?
+  activities      String[] @default([])
   rating          Float    @default(0)
   isHiddenGem     Boolean  @default(false)
 
   stateId String?
   state   State?  @relation(fields: [stateId], references: [id])
   cityId  String?
-  city    City?   @relation(fields: [cityId], references: [id])
+  city    City?  @relation(fields: [cityId], references: [id])
 
   categories Category[] @relation("PlaceCategories")
   reviews    Review[]
