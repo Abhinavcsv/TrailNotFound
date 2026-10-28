@@ -17,6 +17,23 @@ function PlannerPageContent() {
   const [error, setError] = useState<string | null>(null);
   const [itinerary, setItinerary] = useState<ItineraryResponse | null>(null);
 
+  function normalizeItinerary(
+  data: ItineraryResponse,
+): ItineraryResponse {
+  return {
+    ...data,
+    days: data.days.map((day) => ({
+      ...day,
+      activities: day.activities.map((activity) => ({
+        ...activity,
+        id: activity.id ?? crypto.randomUUID(),
+      })),
+    })),
+  };
+}
+function updateItinerary(updated: ItineraryResponse) {
+  setItinerary(updated);
+}
   async function handleSubmit(values: PlannerFormValues) {
     setIsLoading(true);
     setError(null);
@@ -35,7 +52,7 @@ function PlannerPageContent() {
         throw new Error(data.error || "Something went wrong");
       }
 
-      setItinerary(data.itinerary);
+      setItinerary(normalizeItinerary(data.itinerary));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
@@ -139,7 +156,10 @@ function PlannerPageContent() {
 
         {itinerary && (
           <div className="mx-auto mt-10 max-w-5xl px-5 md:px-8">
-            <ItineraryResult itinerary={itinerary} />
+            <ItineraryResult
+              itinerary={itinerary}
+              onUpdate={updateItinerary}
+            />
           </div>
         )}
       </section>

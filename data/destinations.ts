@@ -27,7 +27,7 @@ export const destinations: Destination[] = [
     duration: "4 Days",
     bestSeason: "March - June",
     rating: 4.8,
-    image: placeholderImage("tirthan-valley"),
+    image: "/destinations/tirthan.jpeg",
     description:
       "A quiet valley bordering the Great Himalayan National Park, known for trout-filled rivers, forest trails, and riverside homestays.",
     hiddenGem: true,
@@ -42,7 +42,7 @@ export const destinations: Destination[] = [
     duration: "3 Days",
     bestSeason: "April - June",
     rating: 4.7,
-    image: placeholderImage("chopta"),
+    image: "destinations/chopta.jpg",
     description:
       "Gateway to the Tungnath and Chandrashila treks, with alpine meadows and some of the most accessible high-Himalaya views in Uttarakhand.",
     hiddenGem: false,
@@ -57,7 +57,7 @@ export const destinations: Destination[] = [
     duration: "5 Days",
     bestSeason: "May - June",
     rating: 4.8,
-    image: placeholderImage("munsiyari"),
+    image: "destinations/munsiyari.webp",
     description:
       "A remote hamlet with sweeping Panchachuli peak views and glacial lakes, still mostly discovered by word of mouth rather than tour packages.",
     hiddenGem: true,

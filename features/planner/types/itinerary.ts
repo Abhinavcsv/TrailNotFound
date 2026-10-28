@@ -1,7 +1,12 @@
 export interface ItineraryDayActivity {
+  id?: string;
   time: string;
   title: string;
   description: string;
+  durationMinutes?: number;
+  estimatedCost?: number;
+  category?: string;
+  location?: string;
 }
 
 export interface ItineraryDay {

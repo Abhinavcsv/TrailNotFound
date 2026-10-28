@@ -10,4 +10,5 @@ export type Destination = {
   budget: number
   difficulty: "Easy" | "Moderate" | "Hard"
   hiddenGem: boolean
+  bestSeason?: string
 }

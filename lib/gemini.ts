@@ -19,9 +19,14 @@ export interface PlannerInput {
 }
 
 export interface ItineraryDayActivity {
+  id?: string;
   time: string;
   title: string;
   description: string;
+  durationMinutes: number;
+  estimatedCost: number;
+  category: string;
+  location: string;
 }
 
 export interface ItineraryDay {
@@ -241,6 +246,19 @@ Do not use markdown.
 Do not use code fences.
 Do not add explanations before or after the JSON.
 
+Every activity MUST include:
+- time: start time in 12-hour format, e.g. "9:00 AM"
+- durationMinutes: realistic duration as a number
+- estimatedCost: estimated cost in INR as a number
+- category: one of sightseeing, food, nature, adventure,
+  culture, shopping, relaxation, transport, or other
+- location: real place name or a useful location description
+- title: concise activity name
+- description: useful details for the traveler
+
+Do not invent exact opening hours or precise locations.
+Use reasonable estimates where exact information is unavailable.
+
 The JSON MUST exactly follow this structure:
 
 {
@@ -265,10 +283,14 @@ The JSON MUST exactly follow this structure:
       "title": "string",
       "activities": [
         {
-          "time": "string",
-          "title": "string",
-          "description": "string"
-        }
+  "time": "9:00 AM",
+  "title": "Visit the local monastery",
+  "description": "Explore the monastery and allow time for the surrounding area.",
+  "durationMinutes": 90,
+  "estimatedCost": 100,
+  "category": "culture",
+  "location": "Destination monastery"
+}
       ],
       "estimatedCost": 0
     }
@@ -394,14 +416,49 @@ export async function generateItinerary(
   input: PlannerInput
 ): Promise<ItineraryResponse> {
   const model = genAI.getGenerativeModel({
-    model: "gemini-2.5-flash",
-    generationConfig: {
-      responseMimeType: "application/json",
-      temperature: 0.35,
-    },
-  });
+  model: "gemini-3.6-flash",
+  generationConfig: {
+    responseMimeType: "application/json",
+    temperature: 0.35,
+  },
+});
 
-  const result = await model.generateContent(buildPrompt(input));
+  let result;
+
+for (let attempt = 0; attempt < 4; attempt++) {
+  try {
+    result = await model.generateContent(buildPrompt(input));
+    break;
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : String(error);
+
+    const isTemporary =
+      /503|UNAVAILABLE|429|RESOURCE_EXHAUSTED|500|502|504/i.test(
+        message
+      );
+
+    if (!isTemporary || attempt === 3) {
+      throw error;
+    }
+
+    const delay = Math.min(
+      1000 * 2 ** attempt + Math.random() * 1000,
+      15000
+    );
+
+    console.warn(
+      `Gemini temporarily unavailable. Retry ${attempt + 1}/4 in ${Math.ceil(delay / 1000)}s`
+    );
+
+    await new Promise((resolve) => setTimeout(resolve, delay));
+  }
+}
+
+if (!result) {
+  throw new Error("Itinerary generation failed. Please try again.");
+}
+  
 
   const text = result.response.text();
 
