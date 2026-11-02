@@ -1,82 +1,134 @@
+
 'use client'
 
-import { Mountain, Camera, AtSign, Hash, Globe, ArrowRight } from 'lucide-react'
+import Link from 'next/link'
+import {
+  Mountain,
+  Camera,
+  BriefcaseBusiness,
+  Play,
+  Mail,
+  ArrowUpRight,
+} from 'lucide-react'
 
 const columns = [
   {
     title: 'Explore',
-    links: ['Destinations', 'Hidden Gems', 'Interests', 'Weekend Getaways', 'AI Planner'],
+    links: [
+      { label: 'Destinations', href: '/explore' },
+      { label: 'Hidden Gems', href: '/hidden-gems' },
+      { label: 'Interests', href: '/explore' },
+      { label: 'Weekend Getaways', href: '/explore' },
+      { label: 'AI Planner', href: '/planner' },
+    ],
   },
   {
     title: 'Community',
-    links: ['Travel Stories', 'Top Explorers', 'Join Trips', 'Guidelines', 'Events'],
+    links: [
+      { label: 'Travel Stories', href: '/stories' },
+      { label: 'Top Explorers', href: '/community' },
+      { label: 'Community', href: '/community' },
+      { label: 'Guidelines', href: '/community' },
+    ],
   },
   {
     title: 'Resources',
-    links: ['Travel Guides', 'Packing Lists', 'Safety', 'Help Center', 'Blog'],
+    links: [
+      { label: 'Travel Guides', href: '/explore' },
+      { label: 'Packing Lists', href: '/explore' },
+      { label: 'Travel Safety', href: '/explore' },
+      { label: 'Help Center', href: 'mailto:hello@trailnotfound.com' },
+    ],
   },
   {
     title: 'Company',
-    links: ['About', 'Careers', 'Press', 'Privacy', 'Terms'],
+    links: [
+      { label: 'About', href: '/about' },
+      { label: 'Contact', href: 'mailto:hello@trailnotfound.com' },
+      { label: 'Privacy Policy', href: '/privacy' },
+      { label: 'Terms & Conditions', href: '/terms' },
+    ],
   },
 ]
 
-const socials = [Camera, AtSign, Hash, Globe]
+const socials = [
+  {
+    label: 'Photo updates',
+    icon: Camera,
+    href: null,
+  },
+  {
+    label: 'Professional updates',
+    icon: BriefcaseBusiness,
+    href: null,
+  },
+  {
+    label: 'Video updates',
+    icon: Play,
+    href: null,
+  },
+]
 
 export function Footer() {
   return (
     <footer className="bg-foreground text-white">
       <div className="mx-auto max-w-7xl px-5 py-16 md:px-8 md:py-20">
-        <div className="grid gap-12 lg:grid-cols-[1.4fr_2fr]">
+
+        <div className="grid gap-12 lg:grid-cols-[1.3fr_2fr]">
+
+          {/* Brand */}
           <div>
-            <a href="#top" className="flex items-center gap-2 font-display text-xl font-extrabold">
-              <span className="grid h-8 w-8 place-items-center rounded-xl bg-primary">
-                <Mountain className="h-4 w-4" />
+            <Link
+              href="/"
+              className="flex w-fit items-center gap-2 font-display text-xl font-extrabold"
+            >
+              <span className="grid h-9 w-9 place-items-center rounded-xl bg-primary">
+                <Mountain className="h-5 w-5" />
               </span>
               TrailNotFound
-            </a>
+            </Link>
+
             <p className="mt-5 max-w-sm text-pretty text-sm leading-relaxed text-white/60">
-              India&apos;s AI-powered travel community for explorers who chase stories,
-              not checklists.
+              Discover extraordinary places, plan meaningful journeys
+              and share the experiences that make travel unforgettable.
             </p>
 
-            <div className="mt-8 max-w-sm">
-              <p className="text-sm font-semibold text-white">Join the newsletter</p>
-              <form
-                onSubmit={(e) => e.preventDefault()}
-                className="mt-3 flex items-center gap-2 rounded-full border border-white/15 bg-white/5 p-1.5 focus-within:border-white/40"
-              >
-                <input
-                  type="email"
-                  required
-                  placeholder="you@email.com"
-                  aria-label="Email address"
-                  className="min-w-0 flex-1 bg-transparent px-4 text-sm text-white placeholder:text-white/40 focus:outline-none"
-                />
-                <button
-                  type="submit"
-                  aria-label="Subscribe"
-                  className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground transition-transform hover:-translate-y-0.5"
-                >
-                  <ArrowRight className="h-4 w-4" />
-                </button>
-              </form>
-            </div>
+            <a
+              href="mailto:hello@trailnotfound.com"
+              className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-white/80 transition-colors hover:text-white"
+            >
+              <Mail className="h-4 w-4" />
+              Get in touch
+              <ArrowUpRight className="h-3.5 w-3.5" />
+            </a>
           </div>
 
+          {/* Navigation */}
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
             {columns.map((col) => (
               <div key={col.title}>
-                <h3 className="text-sm font-semibold text-white">{col.title}</h3>
-                <ul className="mt-4 flex flex-col gap-3">
-                  {col.links.map((l) => (
-                    <li key={l}>
-                      <a
-                        href="#"
-                        className="text-sm text-white/60 transition-colors hover:text-white"
-                      >
-                        {l}
-                      </a>
+                <h3 className="text-sm font-semibold text-white">
+                  {col.title}
+                </h3>
+
+                <ul className="mt-5 flex flex-col gap-3">
+                  {col.links.map((link) => (
+                    <li key={link.label}>
+                      {link.href.startsWith('mailto:') ? (
+                        <a
+                          href={link.href}
+                          className="text-sm text-white/60 transition-colors hover:text-white"
+                        >
+                          {link.label}
+                        </a>
+                      ) : (
+                        <Link
+                          href={link.href}
+                          className="text-sm text-white/60 transition-colors hover:text-white"
+                        >
+                          {link.label}
+                        </Link>
+                      )}
                     </li>
                   ))}
                 </ul>
@@ -85,17 +137,27 @@ export function Footer() {
           </div>
         </div>
 
+        {/* Bottom */}
         <div className="mt-14 flex flex-col items-center justify-between gap-6 border-t border-white/10 pt-8 md:flex-row">
-          <p className="text-sm text-white/50">
-            © {new Date().getFullYear()} TrailNotFound. Made for explorers of India.
+
+          <p className="text-center text-sm text-white/50 md:text-left">
+            © {new Date().getFullYear()} TrailNotFound. Made for the journey.
           </p>
-          <div className="flex items-center gap-2">
-            {socials.map((Icon, i) => (
+
+          <div className="flex items-center gap-3">
+            {socials.map(({ label, icon: Icon, href }) => (
               <a
-                key={i}
-                href="#"
-                aria-label="Social link"
-                className="grid h-10 w-10 place-items-center rounded-full bg-white/5 text-white/70 transition-colors hover:bg-white/15 hover:text-white"
+                key={label}
+                href={href ?? undefined}
+                aria-label={label}
+                aria-disabled={!href}
+                tabIndex={href ? 0 : -1}
+                onClick={!href ? (e) => e.preventDefault() : undefined}
+                className={`grid h-10 w-10 place-items-center rounded-full bg-white/5 text-white/70 transition-colors ${
+                  href
+                    ? 'hover:bg-white/15 hover:text-white'
+                    : 'cursor-not-allowed opacity-40'
+                }`}
               >
                 <Icon className="h-[18px] w-[18px]" />
               </a>

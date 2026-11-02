@@ -1,62 +1,91 @@
+
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { motion } from 'framer-motion'
+import {
+  Users,
+  BookOpen,
+  Gem,
+  MapPin,
+} from 'lucide-react'
 
-const stats = [
-  { value: 50000, suffix: '+', label: 'Community Members' },
-  { value: 10000, suffix: '+', label: 'Travel Stories' },
-  { value: 1200, suffix: '+', label: 'Hidden Gems' },
-  { value: 29, suffix: '', label: 'States Covered' },
+const highlights = [
+  {
+    icon: Users,
+    title: 'Travel Community',
+    description:
+      'Connect with explorers and discover journeys shared by travellers.',
+  },
+  {
+    icon: BookOpen,
+    title: 'Real Travel Stories',
+    description:
+      'Explore experiences, travel tips and memories from the road.',
+  },
+  {
+    icon: Gem,
+    title: 'Hidden Discoveries',
+    description:
+      'Find lesser-known places and experiences worth exploring.',
+  },
+  {
+    icon: MapPin,
+    title: 'Explore Your Way',
+    description:
+      'Discover destinations and plan journeys across different regions.',
+  },
 ]
-
-function Counter({ target, suffix }: { target: number; suffix: string }) {
-  const ref = useRef<HTMLSpanElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-60px' })
-  const [value, setValue] = useState(0)
-
-  useEffect(() => {
-    if (!inView) return
-    let raf = 0
-    const duration = 1800
-    const start = performance.now()
-    const tick = (now: number) => {
-      const p = Math.min((now - start) / duration, 1)
-      const eased = 1 - Math.pow(1 - p, 3)
-      setValue(Math.round(target * eased))
-      if (p < 1) raf = requestAnimationFrame(tick)
-    }
-    raf = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(raf)
-  }, [inView, target])
-
-  return (
-    <span ref={ref}>
-      {value.toLocaleString('en-IN')}
-      {suffix}
-    </span>
-  )
-}
 
 export function Stats() {
   return (
     <section className="border-y border-border bg-background py-16 md:py-20">
-      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-y-10 px-5 md:px-8 lg:grid-cols-4">
-        {stats.map((s, i) => (
-          <motion.div
-            key={s.label}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: i * 0.1 }}
-            className="text-center"
-          >
-            <p className="font-display text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl md:text-6xl">
-              <Counter target={s.value} suffix={s.suffix} />
-            </p>
-            <p className="mt-2 text-sm font-medium text-muted-foreground">{s.label}</p>
-          </motion.div>
-        ))}
+      <div className="mx-auto max-w-7xl px-5 md:px-8">
+        <div className="mb-12 mx-auto max-w-2xl text-center">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-primary">
+            The TrailNotFound experience
+          </p>
+
+          <h2 className="font-display text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl md:text-5xl">
+            More than just finding places.
+          </h2>
+
+          <p className="mt-4 text-muted-foreground leading-relaxed">
+            A space to discover destinations, plan meaningful journeys
+            and share the experiences that make travel special.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {highlights.map((item, index) => {
+            const Icon = item.icon
+
+            return (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{
+                  duration: 0.5,
+                  delay: index * 0.1,
+                }}
+                className="rounded-3xl border border-border/70 bg-card p-6 transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-lg"
+              >
+                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+                  <Icon className="h-6 w-6" />
+                </div>
+
+                <h3 className="font-display text-lg font-bold text-foreground">
+                  {item.title}
+                </h3>
+
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  {item.description}
+                </p>
+              </motion.div>
+            )
+          })}
+        </div>
       </div>
     </section>
   )

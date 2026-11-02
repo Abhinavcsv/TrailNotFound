@@ -1,20 +1,8 @@
+
 import type { Destination } from "@/features/explore/types/destination";
 
-// Fast, curated, static dataset — 30 real, low-key hill treks and waterfalls
-// across India. No database call, no external redirect chains — this is
-// what makes the Explore page load instantly instead of waiting on
-// Wikidata/Neon round-trips. Budget/duration/difficulty are reasonable
-// starting estimates, not scraped facts — refine per-destination later
-// as you get real data (e.g. via an admin panel).
-//
-// Images use Picsum's seeded placeholder service (fast, reliable CDN,
-// one request, no redirects) so every card has a distinct visual without
-// depending on external hotlinked photos. Swap these for real photography
-// whenever you're ready — the `image` field is the only thing to change.
-
-function placeholderImage(seed: string) {
-  return `https://picsum.photos/seed/${seed}/800/1000`;
-}
+// Curated static dataset of destinations across India.
+// Budget, duration and difficulty are starting estimates.
 
 export const destinations: Destination[] = [
   {
@@ -27,7 +15,7 @@ export const destinations: Destination[] = [
     duration: "4 Days",
     bestSeason: "March - June",
     rating: 4.8,
-    image: "/destinations/tirthan.jpeg",
+    image: "/destinations/replacements/tirthan-valley.jpg",
     description:
       "A quiet valley bordering the Great Himalayan National Park, known for trout-filled rivers, forest trails, and riverside homestays.",
     hiddenGem: true,
@@ -42,7 +30,7 @@ export const destinations: Destination[] = [
     duration: "3 Days",
     bestSeason: "April - June",
     rating: 4.7,
-    image: "destinations/chopta.jpg",
+    image: "/destinations/replacements/chopta.jpg",
     description:
       "Gateway to the Tungnath and Chandrashila treks, with alpine meadows and some of the most accessible high-Himalaya views in Uttarakhand.",
     hiddenGem: false,
@@ -57,7 +45,7 @@ export const destinations: Destination[] = [
     duration: "5 Days",
     bestSeason: "May - June",
     rating: 4.8,
-    image: "destinations/munsiyari.webp",
+    image: "/destinations/replacements/munsiyari.jpg",
     description:
       "A remote hamlet with sweeping Panchachuli peak views and glacial lakes, still mostly discovered by word of mouth rather than tour packages.",
     hiddenGem: true,
@@ -72,7 +60,7 @@ export const destinations: Destination[] = [
     duration: "2 Days",
     bestSeason: "March - June",
     rating: 4.5,
-    image: placeholderImage("kheerganga"),
+    image: "/destinations/replacements/kheerganga.jpg",
     description:
       "A popular Parvati Valley trek ending at natural hot springs, through pine forests and small Himachali hamlets.",
     hiddenGem: false,
@@ -87,7 +75,7 @@ export const destinations: Destination[] = [
     duration: "1 Day",
     bestSeason: "March - June",
     rating: 4.4,
-    image: placeholderImage("triund"),
+    image: "/destinations/triund.jpg",
     description:
       "A short, well-marked ridge trek above McLeod Ganj with sweeping views of the Dhauladhar range — a classic first Himalayan trek.",
     hiddenGem: false,
@@ -102,7 +90,7 @@ export const destinations: Destination[] = [
     duration: "2 Days",
     bestSeason: "October - June",
     rating: 4.5,
-    image: placeholderImage("nag-tibba"),
+    image: "/destinations/nag-tibba.jpg",
     description:
       "Uttarakhand's highest peak in the lesser Himalayas, reachable on a short weekend trek through oak and rhododendron forest.",
     hiddenGem: true,
@@ -117,7 +105,7 @@ export const destinations: Destination[] = [
     duration: "2 Days",
     bestSeason: "March - June",
     rating: 4.6,
-    image: placeholderImage("prashar-lake"),
+    image: "/destinations/prashar-lake.jpg",
     description:
       "A floating-island lake at 2,730m with a three-tiered pagoda temple, reached via a gentle trek from Mandi district.",
     hiddenGem: true,
@@ -132,7 +120,7 @@ export const destinations: Destination[] = [
     duration: "5 Days",
     bestSeason: "December - April",
     rating: 4.7,
-    image: placeholderImage("kedarkantha"),
+    image: "/destinations/kedarkantha.jpg",
     description:
       "One of the most reliable winter snow treks in India, through pine forest to a 360-degree summit view of the Garhwal range.",
     hiddenGem: false,
@@ -147,7 +135,7 @@ export const destinations: Destination[] = [
     duration: "3 Days",
     bestSeason: "June - September",
     rating: 4.9,
-    image: placeholderImage("dzukou-valley"),
+    image: "/destinations/dzukou-valley.jpg",
     description:
       "A rolling valley on the Nagaland-Manipur border famous for seasonal wildflowers and rare quiet, far from the usual Himalayan trek circuit.",
     hiddenGem: true,
@@ -162,7 +150,7 @@ export const destinations: Destination[] = [
     duration: "6 Days",
     bestSeason: "April - June",
     rating: 4.7,
-    image: placeholderImage("har-ki-dun"),
+    image: "/destinations/har-ki-dun.jpg",
     description:
       "A cradle-shaped valley trek through centuries-old villages, with views of the Swargarohini peaks.",
     hiddenGem: false,
@@ -177,7 +165,7 @@ export const destinations: Destination[] = [
     duration: "3 Days",
     bestSeason: "May - June",
     rating: 4.5,
-    image: placeholderImage("bhrigu-lake"),
+    image: "/destinations/bhrigu-lake.jpg",
     description:
       "A high-altitude lake trek near Manali through open meadows, less crowded than the more commercial Kheerganga route.",
     hiddenGem: true,
@@ -192,7 +180,7 @@ export const destinations: Destination[] = [
     duration: "5 Days",
     bestSeason: "October - November",
     rating: 4.8,
-    image: placeholderImage("sandakphu"),
+    image: "/destinations/sandakphu.jpg",
     description:
       "The highest point in West Bengal, with a rare single-frame view of four of the world's five highest peaks on a clear day.",
     hiddenGem: false,
@@ -207,7 +195,7 @@ export const destinations: Destination[] = [
     duration: "2 Days",
     bestSeason: "October - February",
     rating: 4.6,
-    image: placeholderImage("kudremukh"),
+    image: "/destinations/kudremukh.jpg",
     description:
       "A horse-face-shaped peak in the Western Ghats, trekked through shola forest and grassland with monsoon-fed streams.",
     hiddenGem: true,
@@ -222,7 +210,7 @@ export const destinations: Destination[] = [
     duration: "1 Day",
     bestSeason: "September - May",
     rating: 4.5,
-    image: placeholderImage("chembra-peak"),
+    image: "/destinations/chembra-peak.jpg",
     description:
       "Wayanad's highest peak, known for a heart-shaped lake near the summit that never dries up even in peak summer.",
     hiddenGem: false,
@@ -237,7 +225,7 @@ export const destinations: Destination[] = [
     duration: "5 Days",
     bestSeason: "March - June",
     rating: 4.7,
-    image: placeholderImage("kuari-pass"),
+    image: "/destinations/kuari-pass.jpg",
     description:
       "Once scouted by Lord Curzon, this pass trek offers a continuous panorama of Nanda Devi and Dronagiri without technical difficulty.",
     hiddenGem: true,
@@ -252,7 +240,7 @@ export const destinations: Destination[] = [
     duration: "1 Day",
     bestSeason: "June - September",
     rating: 4.7,
-    image: placeholderImage("dudhsagar-falls"),
+    image: "/destinations/dudhsagar-falls.jpg",
     description:
       "A four-tiered waterfall on the Goa-Karnataka border, most dramatic in monsoon when it earns its name — 'sea of milk'.",
     hiddenGem: false,
@@ -267,7 +255,7 @@ export const destinations: Destination[] = [
     duration: "1 Day",
     bestSeason: "August - November",
     rating: 4.6,
-    image: placeholderImage("jog-falls"),
+    image: "/destinations/jog-falls.jpg",
     description:
       "India's second-highest plunge waterfall, dropping in four distinct streams on the Sharavathi river.",
     hiddenGem: false,
@@ -282,7 +270,7 @@ export const destinations: Destination[] = [
     duration: "1 Day",
     bestSeason: "June - January",
     rating: 4.6,
-    image: placeholderImage("athirappilly-falls"),
+    image: "/destinations/athirappilly-falls.jpg",
     description:
       "Kerala's largest waterfall, set against dense forest on the edge of the Sholayar range, often called the 'Niagara of India'.",
     hiddenGem: false,
@@ -297,7 +285,7 @@ export const destinations: Destination[] = [
     duration: "1 Day",
     bestSeason: "July - October",
     rating: 4.5,
-    image: placeholderImage("kunchikal-falls"),
+    image: "/destinations/kunchikal-falls.png",
     description:
       "One of India's tallest waterfalls, tiered down a remote hillside in the Western Ghats and reached via a rough approach trail.",
     hiddenGem: true,
@@ -312,7 +300,7 @@ export const destinations: Destination[] = [
     duration: "1 Day",
     bestSeason: "June - September",
     rating: 4.8,
-    image: placeholderImage("nohkalikai-falls"),
+    image: "/destinations/nohkalikai-falls.jpg",
     description:
       "India's tallest plunge waterfall, near Cherrapunji, dropping into a pool that turns a striking blue-green in the dry months.",
     hiddenGem: false,
@@ -327,7 +315,7 @@ export const destinations: Destination[] = [
     duration: "2 Days",
     bestSeason: "August - December",
     rating: 4.6,
-    image: placeholderImage("barehipani-falls"),
+    image: "/destinations/barehipani-falls.jpg",
     description:
       "A two-tiered waterfall inside Similipal National Park, one of India's highest and rarely crowded given its forest-reserve location.",
     hiddenGem: true,
@@ -342,7 +330,7 @@ export const destinations: Destination[] = [
     duration: "1 Day",
     bestSeason: "June - September",
     rating: 4.3,
-    image: placeholderImage("randha-falls"),
+    image: "/destinations/randha-falls.jpg",
     description:
       "A horseshoe-shaped waterfall near Bhandardara in the Sahyadris, easy to combine with a short weekend Maharashtra getaway.",
     hiddenGem: false,
@@ -357,7 +345,7 @@ export const destinations: Destination[] = [
     duration: "1 Day",
     bestSeason: "June - September",
     rating: 4.4,
-    image: placeholderImage("thoseghar-falls"),
+    image: "/destinations/thoseghar-falls.jpg",
     description:
       "A cluster of waterfalls near Satara cascading from a plateau edge, at their fullest and most photogenic through the monsoon.",
     hiddenGem: true,
@@ -372,7 +360,7 @@ export const destinations: Destination[] = [
     duration: "1 Day",
     bestSeason: "June - January",
     rating: 4.5,
-    image: placeholderImage("meenmutty-falls"),
+    image: "/destinations/meenmutty-falls.jpg",
     description:
       "Wayanad's tallest waterfall, reached through a short forest trail — quieter than the district's more commercial viewpoints.",
     hiddenGem: true,
@@ -387,7 +375,7 @@ export const destinations: Destination[] = [
     duration: "1 Day",
     bestSeason: "July - September",
     rating: 4.4,
-    image: placeholderImage("hogenakkal-falls"),
+    image: "/destinations/replacements/hogenakkal-falls.jpg",
     description:
       "Known as the 'Niagara of India', with coracle boat rides threading between rock formations on the Kaveri river.",
     hiddenGem: false,
@@ -402,7 +390,7 @@ export const destinations: Destination[] = [
     duration: "1 Day",
     bestSeason: "July - November",
     rating: 4.5,
-    image: placeholderImage("khandadhar-falls"),
+    image: "/destinations/khandadhar-falls.jpg",
     description:
       "A horsetail-shaped waterfall in Sundargarh district, dropping from a forested plateau and rarely visited by outside travelers.",
     hiddenGem: true,
@@ -417,7 +405,7 @@ export const destinations: Destination[] = [
     duration: "1 Day",
     bestSeason: "July - October",
     rating: 4.3,
-    image: placeholderImage("dhuandhar-falls"),
+    image: "/destinations/dhuandhar-falls.jpg",
     description:
       "The Narmada river forced through the Marble Rocks gorge at Bhedaghat, throwing up a fine mist that gives the falls their name — 'smoke cascade'.",
     hiddenGem: false,
@@ -432,7 +420,7 @@ export const destinations: Destination[] = [
     duration: "1 Day",
     bestSeason: "March - June",
     rating: 4.0,
-    image: placeholderImage("kempty-falls"),
+    image: "/destinations/replacements/kempty-falls.jpg",
     description:
       "A popular multi-tiered waterfall near Mussoorie, easy to reach and a common add-on to a hill-station weekend.",
     hiddenGem: false,
@@ -447,7 +435,7 @@ export const destinations: Destination[] = [
     duration: "1 Day",
     bestSeason: "October - March",
     rating: 4.6,
-    image: placeholderImage("vantawng-falls"),
+    image: "/destinations/replacements/vantawng-falls.jpg",
     description:
       "Mizoram's tallest waterfall, set in dense hillside forest and almost never crowded given its distance from the main tourist circuit.",
     hiddenGem: true,
@@ -462,7 +450,7 @@ export const destinations: Destination[] = [
     duration: "2 Days",
     bestSeason: "May - October",
     rating: 4.5,
-    image: placeholderImage("beas-kund"),
+    image: "/destinations/beas-kund.jpg",
     description:
       "A glacial lake trek near Solang Valley, considered the source of the Beas river, doable comfortably as a short weekend trip.",
     hiddenGem: false,

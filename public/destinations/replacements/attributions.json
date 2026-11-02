@@ -1,0 +1,79 @@
+{
+  "tirthan-valley": {
+    "destination": "Tirthan Valley",
+    "image": "/destinations/replacements/tirthan-valley.jpg",
+    "title": "File:Bathad Village, Plachen Valley, Kullu District Himachal Pradesh.jpeg",
+    "creator": "Ramwik",
+    "credit": "Own work",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Bathad_Village,_Plachen_Valley,_Kullu_District_Himachal_Pradesh.jpeg",
+    "reviewStatus": "pending"
+  },
+  "chopta": {
+    "destination": "Chopta",
+    "image": "/destinations/replacements/chopta.jpg",
+    "title": "File:Tungnath, highest Shiva temple in the world.jpg",
+    "creator": "Sujy40",
+    "credit": "Own work",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Tungnath,_highest_Shiva_temple_in_the_world.jpg",
+    "reviewStatus": "pending"
+  },
+  "munsiyari": {
+    "destination": "Munsiyari",
+    "image": "/destinations/replacements/munsiyari.jpg",
+    "title": "File:Panchchuli mountain Peak as seen from Munsiyari, in the Pithoragarh District of Uttarakhand, India.jpg",
+    "creator": "Abhijit Kar Gupta from Kolkata, India",
+    "credit": "Sleepy Mountain: Panchchuli Peak",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Panchchuli_mountain_Peak_as_seen_from_Munsiyari,_in_the_Pithoragarh_District_of_Uttarakhand,_India.jpg",
+    "reviewStatus": "pending"
+  },
+  "kheerganga": {
+    "destination": "Kheerganga",
+    "image": "/destinations/replacements/kheerganga.jpg",
+    "title": "File:Kheerganga trek starting.jpg",
+    "creator": "Nikhil.m.sharma",
+    "credit": "Own work",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Kheerganga_trek_starting.jpg",
+    "reviewStatus": "pending"
+  },
+  "hogenakkal-falls": {
+    "destination": "Hogenakkal Falls",
+    "image": "/destinations/replacements/hogenakkal-falls.jpg",
+    "title": "File:Hogenakkal Tamil Nadu.JPG",
+    "creator": "L.vivian.richard",
+    "credit": "Own work",
+    "license": "Public domain",
+    "licenseUrl": "",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hogenakkal_Tamil_Nadu.JPG",
+    "reviewStatus": "pending"
+  },
+  "kempty-falls": {
+    "destination": "Kempty Falls",
+    "image": "/destinations/replacements/kempty-falls.jpg",
+    "title": "File:Kempty Water Fall Mussoorie.jpg",
+    "creator": "KuwarOnline",
+    "credit": "Own work",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Kempty_Water_Fall_Mussoorie.jpg",
+    "reviewStatus": "pending"
+  },
+  "vantawng-falls": {
+    "destination": "Vantawng Falls",
+    "image": "/destinations/replacements/vantawng-falls.jpg",
+    "title": "File:Vantawng Khawhthla.jpg",
+    "creator": "Lpachuau",
+    "credit": "Own work",
+    "license": "CC BY 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Vantawng_Khawhthla.jpg",
+    "reviewStatus": "pending"
+  }
+}

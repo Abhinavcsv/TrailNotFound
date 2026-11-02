@@ -412,58 +412,56 @@ function validateItinerary(
   }
 }
 
+
 export async function generateItinerary(
   input: PlannerInput
 ): Promise<ItineraryResponse> {
   const model = genAI.getGenerativeModel({
-  model: "gemini-3.6-flash",
-  generationConfig: {
-    responseMimeType: "application/json",
-    temperature: 0.35,
-  },
-});
+    model: "gemini-3.8-flash",
+    generationConfig: {
+      responseMimeType: "application/json",
+      temperature: 0.35,
+      maxOutputTokens: 8192,
+    },
+  });
 
   let result;
 
-for (let attempt = 0; attempt < 4; attempt++) {
-  try {
-    result = await model.generateContent(buildPrompt(input));
-    break;
-  } catch (error) {
-    const message =
-      error instanceof Error ? error.message : String(error);
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      result = await model.generateContent(buildPrompt(input));
+      break;
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : String(error);
 
-    const isTemporary =
-      /503|UNAVAILABLE|429|RESOURCE_EXHAUSTED|500|502|504/i.test(
-        message
-      );
+      console.error("Gemini API error:", message);
 
-    if (!isTemporary || attempt === 3) {
-      throw error;
+      if (/429|RESOURCE_EXHAUSTED|quota/i.test(message)) {
+        throw new Error("GEMINI_QUOTA_EXCEEDED");
+      }
+
+      const temporary =
+        /503|UNAVAILABLE|500|502|504|ECONNRESET|ETIMEDOUT/i.test(
+          message
+        );
+
+      if (!temporary || attempt === 1) {
+        throw error;
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 1000));
     }
-
-    const delay = Math.min(
-      1000 * 2 ** attempt + Math.random() * 1000,
-      15000
-    );
-
-    console.warn(
-      `Gemini temporarily unavailable. Retry ${attempt + 1}/4 in ${Math.ceil(delay / 1000)}s`
-    );
-
-    await new Promise((resolve) => setTimeout(resolve, delay));
   }
-}
 
-if (!result) {
-  throw new Error("Itinerary generation failed. Please try again.");
-}
-  
+  if (!result) {
+    throw new Error("GEMINI_EMPTY_RESULT");
+  }
 
   const text = result.response.text();
 
   if (!text.trim()) {
-    throw new Error("AI returned an empty response");
+    throw new Error("GEMINI_EMPTY_RESPONSE");
   }
 
   let parsed: ItineraryResponse;
@@ -471,11 +469,10 @@ if (!result) {
   try {
     parsed = JSON.parse(text) as ItineraryResponse;
   } catch {
-    console.error("Invalid Gemini JSON:", text);
-    throw new Error("Failed to parse itinerary response from AI");
+    console.error("Gemini returned invalid JSON");
+    throw new Error("GEMINI_INVALID_JSON");
   }
 
   validateItinerary(parsed, input);
-
   return parsed;
 }

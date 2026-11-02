@@ -1,7 +1,7 @@
 allowBuilds:
   '@google/genai': false
   '@prisma/engines': true
-  core-js: set this to true or false
+  core-js: false
   esbuild: true
   msw: false
   prisma: true

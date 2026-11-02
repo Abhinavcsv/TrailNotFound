@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { LoaderCircle } from "lucide-react";
 import {
   DndContext,
   PointerSensor,
@@ -409,6 +410,25 @@ function handleDragEnd(event: DragEndEvent) {
   const [librarySearch, setLibrarySearch] = useState("");
   const [libraryCategory, setLibraryCategory] = useState("all");
   const [selectedDay, setSelectedDay] = useState("1");
+  const [isDownloading, setIsDownloading] = useState(false);
+const downloadInProgress = useRef(false);
+
+async function handleDownloadPDF() {
+  if (downloadInProgress.current) return;
+
+  downloadInProgress.current = true;
+  setIsDownloading(true);
+
+  try {
+    await downloadItineraryPDF(itinerary);
+  } catch (error) {
+    console.error("PDF download failed:", error);
+    window.alert("Unable to download PDF. Please try again.");
+  } finally {
+    downloadInProgress.current = false;
+    setIsDownloading(false);
+  }
+}
   function updateActivity(
     dayIndex: number,
     activityId: string,
@@ -635,20 +655,24 @@ function duplicateActivity(dayIndex: number, activityId: string) {
   </div>
 
   <button
-    type="button"
-    onClick={async () => {
-      try {
-        await downloadItineraryPDF(itinerary);
-      } catch (error) {
-        console.error("PDF download failed:", error);
-        window.alert("Unable to download PDF. Please try again.");
-      }
-    }}
-    className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-bold text-primary-foreground shadow-sm transition hover:opacity-90"
-  >
-    <ArrowRight className="h-4 w-4" />
-    Download PDF
-  </button>
+  type="button"
+  onClick={handleDownloadPDF}
+  disabled={isDownloading}
+  aria-busy={isDownloading}
+  className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-bold text-primary-foreground shadow-sm transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+>
+  {isDownloading ? (
+    <>
+      <LoaderCircle className="h-4 w-4 animate-spin" />
+      Generating PDF...
+    </>
+  ) : (
+    <>
+      <ArrowRight className="h-4 w-4" />
+      Download PDF
+    </>
+  )}
+</button>
 </div>
 
       {/* =========================

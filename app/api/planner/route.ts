@@ -11,10 +11,14 @@ export async function POST(req: NextRequest) {
   }
 
   let body: Partial<PlannerInput>;
+
   try {
     body = await req.json();
   } catch {
-    return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Invalid request body" },
+      { status: 400 }
+    );
   }
 
   const startLocation = body.startLocation?.trim();
@@ -75,11 +79,39 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return NextResponse.json({ tripId: trip.id, itinerary });
+    return NextResponse.json({
+      tripId: trip.id,
+      itinerary,
+    });
   } catch (err) {
-    console.error("Planner generation error:", err);
+    const message =
+      err instanceof Error ? err.message : String(err);
+
+    console.error(
+      "Planner generation error:",
+      message,
+      err
+    );
+
+    if (message === "GEMINI_QUOTA_EXCEEDED") {
+      return NextResponse.json(
+        {
+          error:
+            "AI planner has reached its API quota or rate limit. Please try again later.",
+          code: "GEMINI_QUOTA_EXCEEDED",
+        },
+        { status: 429 }
+      );
+    }
+
     return NextResponse.json(
-      { error: "Failed to generate itinerary. Please try again." },
+      {
+        error: "Failed to generate itinerary. Please try again.",
+        code:
+          message === "GEMINI_INVALID_JSON"
+            ? "INVALID_AI_RESPONSE"
+            : "PLANNER_ERROR",
+      },
       { status: 500 }
     );
   }

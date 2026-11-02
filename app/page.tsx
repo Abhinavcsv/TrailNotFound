@@ -1,4 +1,3 @@
-import { Navbar } from '@/components/shared/navbar'
 import { Hero } from '@/components/landing/hero'
 import { FeaturedDestinations } from '@/components/landing/featured-destinations'
 import { ExploreInterests } from '@/components/landing/explore-interests'
@@ -13,7 +12,6 @@ import { Footer } from '@/components/shared/footer'
 export default function Page() {
   return (
     <main className="relative bg-background">
-      <Navbar />
       <Hero />
       <FeaturedDestinations />
       <ExploreInterests />
