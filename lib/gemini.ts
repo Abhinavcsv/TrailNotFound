@@ -417,7 +417,7 @@ export async function generateItinerary(
   input: PlannerInput
 ): Promise<ItineraryResponse> {
   const model = genAI.getGenerativeModel({
-    model: "gemini-3.8-flash",
+    model: "gemini-3.5-flash",
     generationConfig: {
       responseMimeType: "application/json",
       temperature: 0.35,
